@@ -1,6 +1,6 @@
 const  express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -33,19 +33,52 @@ async function run() {
 
     const toysCollection = client.db('toysShop').collection('toys');
 
+    // Search 
+     
+    // const indexKeys ={carName:1, subCategory:1};
+    // const indexOptions = {name:"carNameSubCategory"};
+    // const result = await toysCollection.createIndex(indexKeys,indexOptions);
+
+
+    // app.get("/toy/:text",async(req,res)=>{
+    //   const text =req.params.text;
+    //   const result= await toysCollection
+    //   .find({
+    //     $or:[
+    //       {carName:{$regex:text, $options:"i"}},
+    //       {SubCategory:{$regex:text, $options:"i"}},
+    //     ],
+    //   }).toArray();
+    //   res.send(result);
+    // })
+
+  // Posting Data
+    app.post('/toys',async(req,res)=>{
+      const body =req.body;
+      const result = await toysCollection.insertOne(body)
+      res.send(result)
+      
+    })
+// Get Data
     app.get('/toys',async(req,res)=>{
         const cursor = toysCollection.find();
         const result =await cursor.toArray();
         res.send(result);
     })
 
+    // Only My Job 
 
-    app.post('/toys',async(req,res)=>{
-      const body =req.body;
-      const result = await toysCollection.insertOne(body)
-      res.send(result)
-      console.log(body)
+    app.get('/myToys/:email',async(req,res)=>{
+      console.log(req.params.email);
+      const result = await toysCollection.find({sellerEmail:req.params.email}).toArray();
+      res.send(result);
     })
+
+    // User Load 
+   
+
+
+   
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
