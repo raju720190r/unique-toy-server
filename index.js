@@ -40,6 +40,17 @@ async function run() {
       .find({carName:{$regex:text, $options: "i"}}).toArray();
       res.send(result);
     })
+
+    // Shorting 
+    app.get('/myToys',async(req,res)=>{
+      const query ={};
+      const options = {
+           sort:{"price":-1},
+      }
+     const cursor = toysCollection.find(query,options);
+     const result =await cursor.toArray();
+      res.send(result)
+    })
     
 
     // Posting Data
@@ -112,8 +123,8 @@ async function run() {
 
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    // await client.db("admin").command({ ping: 1 });
+    // console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
