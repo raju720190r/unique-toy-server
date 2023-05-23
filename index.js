@@ -29,28 +29,18 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const toysCollection = client.db('toysShop').collection('toys');
 
     // Search 
-
-    // const indexKeys ={carName:1, subCategory:1};
-    // const indexOptions = {name:"carNameSubCategory"};
-    // const result = await toysCollection.createIndex(indexKeys,indexOptions);
-
-
-    // app.get("/toy/:text",async(req,res)=>{
-    //   const text =req.params.text;
-    //   const result= await toysCollection
-    //   .find({
-    //     $or:[
-    //       {carName:{$regex:text, $options:"i"}},
-    //       {SubCategory:{$regex:text, $options:"i"}},
-    //     ],
-    //   }).toArray();
-    //   res.send(result);
-    // })
+    app.get('/toySearch/:text',async(req,res)=>{
+      const text = req.params.text;
+      const result = await toysCollection
+      .find({carName:{$regex:text, $options: "i"}}).toArray();
+      res.send(result);
+    })
+    
 
     // Posting Data
     app.post('/toys', async (req, res) => {
@@ -65,6 +55,7 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     })
+
 
     // Only My Job 
 
