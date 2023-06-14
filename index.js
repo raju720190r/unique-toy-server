@@ -41,16 +41,6 @@ async function run() {
       res.send(result);
     })
 
-    // Shorting 
-    app.get('/myToys',async(req,res)=>{
-      const query ={};
-      const options = {
-           sort:{"price":-1},
-      }
-     const cursor = toysCollection.find(query,options);
-     const result =await cursor.toArray();
-      res.send(result)
-    })
     
 
     // Posting Data
@@ -71,8 +61,9 @@ async function run() {
     // Only My Job 
 
     app.get('/myToys/:email', async (req, res) => {
-      console.log(req.params.email);
-      const result = await toysCollection.find({ sellerEmail: req.params.email }).toArray();
+      const query={};
+      const options= {sort:{"price":-1} }
+      const result = await toysCollection.find({sellerEmail: req.params.email},options,query).toArray();
       res.send(result);
     })
 
